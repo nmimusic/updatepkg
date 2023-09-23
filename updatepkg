@@ -1,0 +1,91 @@
+#!/bin/bash
+
+updatepkg_version="20230923"
+
+_aptonly="false"
+
+# Translations
+_lang=$(printenv LANG | grep -oP '.+(?=\.)')
+if [[ ${_lang} == "ja_JP" ]]; then
+	msg_root="rootで実行して下さい"
+	msg_invalid_arg="不正なオプションです"
+	msg_usage="使い方"
+	msg_usage_options="オプション"
+	msg_usage_y="「-y」の入力をスキップ"
+	msg_usage_h="使い方を表示"
+	msg_usage_v="バージョンを表示"
+	msg_usage_n="設定ファイルを削除"
+	msg_done="完了しました！"
+else
+	msg_root="Need to run as root!"
+	msg_invalid_arg="Invalid argument"
+	msg_usage="Usage"
+	msg_usage_options="Options"
+	msg_usage_y="Skip input '-y'"
+	msg_usage_h="Show usage"
+	msg_usage_v="Show version"
+	msg_usage_n="Remove configuration files"
+	msg_done="Done!"
+fi
+
+usage(){
+	echo "${msg_usage}: updatepkg <options>"
+	echo
+	echo "${msg_usage_options}:"
+	echo "   -y     ${msg_usage_y}"
+	echo "   -n     ${msg_usage_n}"
+	echo
+	echo "   -h     ${msg_usage_h}"
+	echo "   -v     ${msg_usage_v}"
+}
+
+main(){
+	if [[ $(whoami) != "root" ]]; then
+		echo ${msg_root}
+		exit 1
+	fi
+
+	apt update
+	apt upgrade ${_yes}
+	apt autoremove ${_purge}
+
+	echo ${msg_done}
+}
+
+version(){
+	echo
+	echo "updatepkg v${updatepkg_version}"
+	echo "Copyright (c) 2023 Radio New Japan."
+	echo
+	echo "This program may be freely redistributed under"
+	echo "the terms of the 3-clause BSD License."
+	echo
+}
+
+while getopts 'hnvy' arg; do
+	case ${arg} in
+		h)
+			usage
+			exit 0
+			;;
+		n)
+			_purge="--purge"
+			shift 1
+			;;
+		v)
+			version
+			exit 0
+			;;
+		y)
+			_yes="-y"
+			shift 1
+			;;
+		*)
+			usage
+			exit 1
+			;;
+	esac
+done
+
+main
+
