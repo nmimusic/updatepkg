@@ -47,7 +47,7 @@ main(){
 
 	apt update
 	apt upgrade ${_yes}
-	apt autoremove ${_purge}
+	apt autoremove ${_purge} ${_yes}
 
 	echo ${msg_done}
 }
