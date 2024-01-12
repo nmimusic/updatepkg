@@ -1,8 +1,8 @@
 # updatepkg
 ----
-A Bash script to simplify package updates
+A Bash script to simplify package updates with DNF
 
-(C) 2023 Radio New Japan
+(C) 2023-2024 Shin Nippon Hoso (Radio New Japan Brodacasting Club)
 
 # Installation
 ```bash
