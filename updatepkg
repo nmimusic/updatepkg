@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2023-2024 Shin Nippon Hoso
+# Copyright (c) 2023-2024 Nakamura Musical Industries.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,9 +25,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-updatepkg_version="20230923"
+updatepkg_version="20240910"
 
-_dnfonly="false"
+_aptonly="false"
 
 # Translations
 _lang=$(printenv LANG | grep -oP '.+(?=\.)')
@@ -39,7 +39,7 @@ if [[ ${_lang} == "ja_JP" ]]; then
 	msg_usage_y="「-y」の入力をスキップ"
 	msg_usage_h="使い方を表示"
 	msg_usage_v="バージョンを表示"
-	msg_usage_d="DNFのみ実行"
+	msg_usage_a="APTのみ実行"
 	msg_done="完了しました！"
 else
 	msg_root="Need to run as root!"
@@ -49,7 +49,7 @@ else
 	msg_usage_y="Skip input '-y'"
 	msg_usage_h="Show usage"
 	msg_usage_v="Show version"
-	msg_usage_d="Run DNF only"
+	msg_usage_a="Run APT only"
 	msg_done="Done!"
 fi
 
@@ -58,7 +58,7 @@ usage(){
 	echo
 	echo "${msg_usage_options}:"
 	echo "   -y     ${msg_usage_y}"
-	echo "   -d     ${msg_usage_d}"
+	echo "   -a     ${msg_usage_a}"
 	echo
 	echo "   -h     ${msg_usage_h}"
 	echo "   -v     ${msg_usage_v}"
@@ -70,11 +70,11 @@ main(){
 		exit 1
 	fi
 
-	dnf update
-	dnf upgrade ${_yes}
-	dnf autoremove ${_purge} ${_yes}
+	apt update
+	apt upgrade ${_yes}
+	apt autoremove ${_purge} ${_yes}
 
-	if [[ ${dnfonly} != ${true} ]]; then
+	if [[ ${_aptonly} != "true" ]]; then
 		if [ $(command -v flatpak) ]; then
 			flatpak update ${_yes}
 		fi
@@ -86,21 +86,21 @@ main(){
 version(){
 	echo
 	echo "updatepkg v${updatepkg_version}"
-	echo "Copyright (c) 2023-2024 Shin Nippon Hoso."
+	echo "Copyright (c) 2023-2024 Nakamura Musical Industries."
 	echo
 	echo "This program may be freely redistributed under"
 	echo "the terms of the 3-clause BSD License."
 	echo
 }
 
-while getopts 'hdvy' arg; do
+while getopts 'havy' arg; do
 	case ${arg} in
 		h)
 			usage
 			exit 0
 			;;
-		d)
-			_dnfonly="true"
+		a)
+			_aptonly="true"
 			shift 1
 			;;
 		v)
@@ -119,4 +119,3 @@ while getopts 'hdvy' arg; do
 done
 
 main
-

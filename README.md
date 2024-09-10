@@ -1,12 +1,12 @@
 # updatepkg
 ----
-A Bash script to simplify package updates with DNF
+A Bash script to simplify package updates with APT/Flatpak
 
-(C) 2023-2024 Shin Nippon Hoso (Radio New Japan Brodacasting Club)
+(C) 2023-2024 Nakamura Musical Industries
 
 # Installation
 ```bash
-git clone https://github.com/njb-fm/updatepkg
+git clone https://github.com/nmimusic/updatepkg
 cd updatepkg
 sudo make install
 ```
